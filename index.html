@@ -327,23 +327,30 @@
         height: 80px;
         left: 50%;
         top: 80px;
-        /* transform: translateX(-50%); */
       }
 
       .lead-collector {
         height: 60px;
         left: 30%;
         top: 80px;
-        /* transform: rotate(-30deg);
-        transform-origin: top; */
       }
 
       .lead-emitter {
         height: 60px;
         left: 70%;
         top: 80px;
-        /* transform: rotate(30deg);
-        transform-origin: top; */
+      }
+
+      .transistor-label {
+        position: absolute;
+        top: 30px;
+        left: 0;
+        width: 100%;
+        text-align: center;
+        color: white;
+        font-size: 0.7rem;
+        font-weight: bold;
+        text-shadow: 1px 1px 1px rgba(0,0,0,0.5);
       }
 
       .tab {
@@ -428,6 +435,18 @@
         color: #333;
       }
 
+      .capacitor-label {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: 0.7rem;
+        font-weight: bold;
+        color: #333;
+        text-align: center;
+        width: 100%;
+      }
+
       .diode {
         width: 100px;
         height: 40px;
@@ -485,6 +504,12 @@
         transform: translate(-50%, -50%);
         opacity: 0.3;
         z-index: -1;
+        transition: opacity 0.3s, box-shadow 0.3s;
+      }
+
+      .led-glow.active {
+        opacity: 0.7;
+        box-shadow: 0 0 20px currentColor;
       }
 
       .component-info {
@@ -1267,11 +1292,8 @@
 
             <div class="visualization">
               <h3>Transistor Visualization</h3>
-              <div class="transistor">
-                <div class="transistor-body"></div>
-                <div class="transistor-lead lead-base"></div>
-                <div class="transistor-lead lead-collector"></div>
-                <div class="transistor-lead lead-emitter"></div>
+              <div id="transistor-vis">
+                <!-- Transistor visualization will be generated here -->
               </div>
 
               <div class="result">
@@ -1517,6 +1539,12 @@
               ? "capacitor electrolytic"
               : "capacitor";
 
+          // Add capacitor label with value
+          const capLabel = document.createElement("div");
+          capLabel.className = "capacitor-label";
+          capLabel.textContent = `${displayValue}${unit}\n${voltage}V`;
+          capElement.appendChild(capLabel);
+
           capVis.appendChild(capElement);
         } else {
           document.getElementById("capacitor-value").textContent =
@@ -1629,12 +1657,17 @@
         diodeElement.appendChild(body);
         diodeElement.appendChild(arrow);
 
-        // For LEDs, add a light emission effect
+        // For LEDs, add a light emission effect that only shows in forward bias
         if (isLED) {
           const glow = document.createElement("div");
           glow.className = "led-glow";
           glow.style.backgroundColor = color;
-          glow.style.boxShadow = `0 0 20px ${color}`;
+          
+          // Only activate glow in forward bias
+          if (testConfig === "forward") {
+            glow.classList.add("active");
+          }
+          
           diodeVis.appendChild(glow);
         }
 
@@ -1651,43 +1684,83 @@
         const testConfig = document.getElementById("transistor-test").value;
 
         let specs = "";
+        let transistorName = "";
 
         switch (transistorType) {
           case "bc548":
             specs =
               "Type: NPN BJT | Max Collector Current: 100mA | Max VCEO: 30V | Current Gain (hFE): 110-800 | Max Power: 500mW | Package: TO-92";
+            transistorName = "BC548";
             break;
           case "bc547":
             specs =
               "Type: NPN BJT | Max Collector Current: 100mA | Max VCEO: 45V | Current Gain (hFE): 110-800 | Max Power: 500mW | Package: TO-92";
+            transistorName = "BC547";
             break;
           case "2n2222":
             specs =
               "Type: NPN BJT | Max Collector Current: 800mA | Max VCEO: 30V | Current Gain (hFE): 100-300 | Max Power: 500mW | Package: TO-18";
+            transistorName = "2N2222";
             break;
           case "bc557":
             specs =
               "Type: PNP BJT | Max Collector Current: 100mA | Max VCEO: 45V | Current Gain (hFE): 125-800 | Max Power: 500mW | Package: TO-92";
+            transistorName = "BC557";
             break;
           case "2n3904":
             specs =
               "Type: NPN BJT | Max Collector Current: 200mA | Max VCEO: 40V | Current Gain (hFE): 100-300 | Max Power: 625mW | Package: TO-92";
+            transistorName = "2N3904";
             break;
           case "2n3906":
             specs =
               "Type: PNP BJT | Max Collector Current: 200mA | Max VCEO: 40V | Current Gain (hFE): 100-300 | Max Power: 625mW | Package: TO-92";
+            transistorName = "2N3906";
             break;
           case "tip31":
             specs =
               "Type: NPN Power BJT | Max Collector Current: 3A | Max VCEO: 40V | Current Gain (hFE): 10-50 | Max Power: 40W | Package: TO-220";
+            transistorName = "TIP31";
             break;
           case "tip32":
             specs =
               "Type: PNP Power BJT | Max Collector Current: 3A | Max VCEO: 40V | Current Gain (hFE): 10-50 | Max Power: 40W | Package: TO-220";
+            transistorName = "TIP32";
             break;
         }
 
         document.getElementById("transistor-value").textContent = specs;
+
+        // Update visualization
+        const transistorVis = document.getElementById("transistor-vis");
+        transistorVis.innerHTML = "";
+
+        const transistorElement = document.createElement("div");
+        transistorElement.className = "transistor";
+
+        const body = document.createElement("div");
+        body.className = "transistor-body";
+
+        const label = document.createElement("div");
+        label.className = "transistor-label";
+        label.textContent = transistorName;
+        body.appendChild(label);
+
+        const baseLead = document.createElement("div");
+        baseLead.className = "transistor-lead lead-base";
+
+        const collectorLead = document.createElement("div");
+        collectorLead.className = "transistor-lead lead-collector";
+
+        const emitterLead = document.createElement("div");
+        emitterLead.className = "transistor-lead lead-emitter";
+
+        transistorElement.appendChild(body);
+        transistorElement.appendChild(baseLead);
+        transistorElement.appendChild(collectorLead);
+        transistorElement.appendChild(emitterLead);
+
+        transistorVis.appendChild(transistorElement);
       }
 
       // Initialize the page with some default values
