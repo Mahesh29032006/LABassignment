@@ -494,22 +494,35 @@
         transform: translateY(-50%);
       }
 
-      .led-glow {
-        position: absolute;
-        width: 60px;
-        height: 60px;
-        border-radius: 50%;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        opacity: 0.3;
-        z-index: -1;
-        transition: opacity 0.3s, box-shadow 0.3s;
+      .led-container {
+        position: relative;
+        width: 120px;
+        height: 120px;
+        margin: 2rem auto;
       }
 
-      .led-glow.active {
-        opacity: 0.7;
+      .led-image {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        filter: brightness(0.7);
+        transition: filter 0.5s, box-shadow 0.5s;
+      }
+
+      .led-image.forward-bias {
+        filter: brightness(1.2);
         box-shadow: 0 0 20px currentColor;
+      }
+
+      .led-label {
+        position: absolute;
+        bottom: -25px;
+        left: 0;
+        width: 100%;
+        text-align: center;
+        font-size: 0.8rem;
+        font-weight: bold;
+        color: var(--primary);
       }
 
       .component-info {
@@ -1631,47 +1644,72 @@
         const diodeVis = document.getElementById("diode-vis");
         diodeVis.innerHTML = "";
 
-        const diodeElement = document.createElement("div");
-        diodeElement.className = "diode";
-
-        const body = document.createElement("div");
-        body.className = "diode-body";
-        body.style.backgroundColor = color;
-
-        // Add Zener marking if it's a Zener diode
-        if (isZener) {
-          const zenerMark = document.createElement("div");
-          zenerMark.style.position = "absolute";
-          zenerMark.style.left = "45px";
-          zenerMark.style.top = "50%";
-          zenerMark.style.transform = "translateY(-50%)";
-          zenerMark.style.fontSize = "12px";
-          zenerMark.style.fontWeight = "bold";
-          zenerMark.textContent = "Z";
-          body.appendChild(zenerMark);
-        }
-
-        const arrow = document.createElement("div");
-        arrow.className = "diode-arrow";
-
-        diodeElement.appendChild(body);
-        diodeElement.appendChild(arrow);
-
-        // For LEDs, add a light emission effect that only shows in forward bias
         if (isLED) {
-          const glow = document.createElement("div");
-          glow.className = "led-glow";
-          glow.style.backgroundColor = color;
+          // Create LED visualization with image
+          const ledContainer = document.createElement("div");
+          ledContainer.className = "led-container";
+
+          const ledImage = document.createElement("img");
+          ledImage.className = "led-image";
           
-          // Only activate glow in forward bias
-          if (testConfig === "forward") {
-            glow.classList.add("active");
+          // Set the LED image based on color
+          switch (diodeType) {
+            case "led-red":
+              ledImage.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='45' fill='red' stroke='%23333' stroke-width='2'/%3E%3C/svg%3E";
+              break;
+            case "led-green":
+              ledImage.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='45' fill='green' stroke='%23333' stroke-width='2'/%3E%3C/svg%3E";
+              break;
+            case "led-blue":
+              ledImage.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='45' fill='blue' stroke='%23333' stroke-width='2'/%3E%3C/svg%3E";
+              break;
+            case "led-white":
+              ledImage.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='45' fill='white' stroke='%23333' stroke-width='2'/%3E%3C/svg%3E";
+              break;
           }
           
-          diodeVis.appendChild(glow);
-        }
+          // Add glow effect only in forward bias
+          if (testConfig === "forward") {
+            ledImage.classList.add("forward-bias");
+            ledImage.style.filter = `brightness(1.5) drop-shadow(0 0 10px ${color})`;
+          }
+          
+          const ledLabel = document.createElement("div");
+          ledLabel.className = "led-label";
+          ledLabel.textContent = `${diodeType.replace('led-', '').toUpperCase()} LED`;
+          
+          ledContainer.appendChild(ledImage);
+          ledContainer.appendChild(ledLabel);
+          diodeVis.appendChild(ledContainer);
+        } else {
+          // Create standard diode visualization
+          const diodeElement = document.createElement("div");
+          diodeElement.className = "diode";
 
-        diodeVis.appendChild(diodeElement);
+          const body = document.createElement("div");
+          body.className = "diode-body";
+          body.style.backgroundColor = color;
+
+          // Add Zener marking if it's a Zener diode
+          if (isZener) {
+            const zenerMark = document.createElement("div");
+            zenerMark.style.position = "absolute";
+            zenerMark.style.left = "45px";
+            zenerMark.style.top = "50%";
+            zenerMark.style.transform = "translateY(-50%)";
+            zenerMark.style.fontSize = "12px";
+            zenerMark.style.fontWeight = "bold";
+            zenerMark.textContent = "Z";
+            body.appendChild(zenerMark);
+          }
+
+          const arrow = document.createElement("div");
+          arrow.className = "diode-arrow";
+
+          diodeElement.appendChild(body);
+          diodeElement.appendChild(arrow);
+          diodeVis.appendChild(diodeElement);
+        }
       }
 
       // Transistor functionality
