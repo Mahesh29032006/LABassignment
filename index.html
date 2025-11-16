@@ -301,16 +301,17 @@
         vertical-align: middle;
       }
 
+      /* Enhanced Transistor Styles */
       .transistor {
-        width: 120px;
-        height: 160px;
+        width: 180px;
+        height: 220px;
         position: relative;
         margin: 2rem 0;
       }
 
       .transistor-body {
         width: 100%;
-        height: 80px;
+        height: 100px;
         background-color: #333;
         border-radius: 10px 10px 0 0;
         position: absolute;
@@ -326,19 +327,20 @@
       .lead-base {
         height: 80px;
         left: 50%;
-        top: 80px;
+        top: 100px;
+        transform: translateX(-50%);
       }
 
       .lead-collector {
         height: 60px;
         left: 30%;
-        top: 80px;
+        top: 100px;
       }
 
       .lead-emitter {
         height: 60px;
         left: 70%;
-        top: 80px;
+        top: 100px;
       }
 
       .transistor-label {
@@ -348,9 +350,67 @@
         width: 100%;
         text-align: center;
         color: white;
-        font-size: 0.7rem;
+        font-size: 0.9rem;
         font-weight: bold;
-        text-shadow: 1px 1px 1px rgba(0,0,0,0.5);
+        text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.5);
+      }
+
+      .pin-label {
+        position: absolute;
+        font-size: 0.8rem;
+        font-weight: bold;
+        color: var(--primary);
+        text-align: center;
+        width: 60px;
+        background-color: rgba(255, 255, 255, 0.8);
+        padding: 2px 5px;
+        border-radius: 4px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+
+      .pin-label-base {
+        bottom: -25px;
+        left: 50%;
+        transform: translateX(-50%);
+      }
+
+      .pin-label-collector {
+        bottom: -25px;
+        left: 30%;
+        transform: translateX(-50%);
+      }
+
+      .pin-label-emitter {
+        bottom: -25px;
+        left: 70%;
+        transform: translateX(-50%);
+      }
+
+      .pin-arrow {
+        position: absolute;
+        width: 0;
+        height: 0;
+        border-left: 5px solid transparent;
+        border-right: 5px solid transparent;
+        border-top: 8px solid var(--accent);
+      }
+
+      .pin-arrow-base {
+        bottom: -20px;
+        left: 50%;
+        transform: translateX(-50%);
+      }
+
+      .pin-arrow-collector {
+        bottom: -20px;
+        left: 30%;
+        transform: translateX(-50%);
+      }
+
+      .pin-arrow-emitter {
+        bottom: -20px;
+        left: 70%;
+        transform: translateX(-50%);
       }
 
       .tab {
@@ -575,12 +635,10 @@
         <div class="logo">
           <span class="logo-icon"></span>
           Electronics Lab Project
-          
         </div>
         <nav>
           <ul>
             <li><a href="#" class="active">Home</a></li>
-          
           </ul>
         </nav>
       </div>
@@ -589,7 +647,7 @@
     <div class="container">
       <div class="component-section">
         <h1>Experiment 1</h1>
-        <h1>Basic Electronic Components </h1>
+        <h1>Basic Electronic Components</h1>
         <p>
           Select a component type to explore its properties, calculate values,
           and visualize the component with specifications.
@@ -1051,7 +1109,6 @@
                   <option value="ceramic">Ceramic (pF)</option>
                   <option value="electrolytic">Electrolytic (μF)</option>
                   <option value="film">Film (nF)</option>
-                  <!-- <option value="tantalum">Tantalum (μF)</option> -->
                 </select>
               </div>
 
@@ -1104,7 +1161,6 @@
                 <th>Type</th>
                 <th>Capacitance Range</th>
                 <th>Voltage Range</th>
-                <!-- <th>Tolerance</th> -->
                 <th>Applications</th>
               </tr>
             </thead>
@@ -1113,28 +1169,24 @@
                 <td>Ceramic</td>
                 <td>1 pF - 100 μF</td>
                 <td>10V - 6.3kV</td>
-                <!-- <td>±5% to ±20%</td> -->
                 <td>Decoupling, filtering, timing</td>
               </tr>
               <tr>
                 <td>Electrolytic</td>
                 <td>0.1 μF - 1 F</td>
                 <td>6.3V - 500V</td>
-                <!-- <td>±20%</td> -->
                 <td>Power supply filtering</td>
               </tr>
               <tr>
                 <td>Film</td>
                 <td>100 pF - 100 μF</td>
                 <td>50V - 2kV</td>
-                <!-- <td>±1% to ±10%</td> -->
                 <td>Audio circuits, snubbers</td>
               </tr>
               <tr>
                 <td>Tantalum</td>
                 <td>0.1 μF - 1000 μF</td>
                 <td>2V - 50V</td>
-                <!-- <td>±10% to ±20%</td> -->
                 <td>Power supply bypass</td>
               </tr>
             </tbody>
@@ -1293,7 +1345,7 @@
               </div>
 
               <div class="control-group">
-                <label for="transistor-test">Test Configuration</label>
+                <label for="transistor-test">Test Configuration(NO NEED)</label>
                 <select id="transistor-test">
                   <option value="npn">NPN Testing</option>
                   <option value="pnp">PNP Testing</option>
@@ -1327,6 +1379,12 @@
               maximum collector current (IC), and maximum collector-emitter
               voltage (VCEO).
             </p>
+            <p>
+              <strong>Pin Identification:</strong> In most transistors, the pins are
+              arranged as Collector, Base, and Emitter. However, the exact
+              configuration varies by package type. Always refer to the datasheet
+              for the specific transistor.
+            </p>
           </div>
 
           <h3>Transistor Specifications</h3>
@@ -1339,7 +1397,7 @@
                 <th>Max VCEO</th>
                 <th>Gain (hFE)</th>
                 <th>Max Power</th>
-                <th>Applications</th>
+                <th>Package/Pinout</th>
               </tr>
             </thead>
             <tbody>
@@ -1350,7 +1408,7 @@
                 <td>30V</td>
                 <td>110-800</td>
                 <td>500mW</td>
-                <td>Low power amplification</td>
+                <td>TO-92: C-B-E (Flat side facing you)</td>
               </tr>
               <tr>
                 <td>BC547</td>
@@ -1359,7 +1417,7 @@
                 <td>45V</td>
                 <td>110-800</td>
                 <td>500mW</td>
-                <td>General purpose amplification</td>
+                <td>TO-92: C-B-E (Flat side facing you)</td>
               </tr>
               <tr>
                 <td>2N2222</td>
@@ -1368,7 +1426,7 @@
                 <td>30V</td>
                 <td>100-300</td>
                 <td>500mW</td>
-                <td>Switching, amplification</td>
+                <td>TO-18: E-B-C (Viewed from bottom)</td>
               </tr>
               <tr>
                 <td>BC557</td>
@@ -1377,7 +1435,7 @@
                 <td>45V</td>
                 <td>125-800</td>
                 <td>500mW</td>
-                <td>Low power amplification</td>
+                <td>TO-92: C-B-E (Flat side facing you)</td>
               </tr>
               <tr>
                 <td>2N3904</td>
@@ -1386,7 +1444,7 @@
                 <td>40V</td>
                 <td>100-300</td>
                 <td>625mW</td>
-                <td>General purpose amplification</td>
+                <td>TO-92: E-B-C (Flat side facing you)</td>
               </tr>
               <tr>
                 <td>2N3906</td>
@@ -1395,7 +1453,7 @@
                 <td>40V</td>
                 <td>100-300</td>
                 <td>625mW</td>
-                <td>General purpose amplification</td>
+                <td>TO-92: E-B-C (Flat side facing you)</td>
               </tr>
               <tr>
                 <td>TIP31</td>
@@ -1404,7 +1462,7 @@
                 <td>40V</td>
                 <td>10-50</td>
                 <td>40W</td>
-                <td>Power amplification</td>
+                <td>TO-220: B-C-E (Tab is collector)</td>
               </tr>
               <tr>
                 <td>TIP32</td>
@@ -1413,7 +1471,7 @@
                 <td>40V</td>
                 <td>10-50</td>
                 <td>40W</td>
-                <td>Power amplification</td>
+                <td>TO-220: B-C-E (Tab is collector)</td>
               </tr>
             </tbody>
           </table>
@@ -1548,9 +1606,7 @@
 
           const capElement = document.createElement("div");
           capElement.className =
-            type === "electrolytic" || type === "tantalum"
-              ? "capacitor electrolytic"
-              : "capacitor";
+            type === "electrolytic" ? "capacitor electrolytic" : "capacitor";
 
           // Add capacitor label with value
           const capLabel = document.createElement("div");
@@ -1651,33 +1707,39 @@
 
           const ledImage = document.createElement("img");
           ledImage.className = "led-image";
-          
+
           // Set the LED image based on color
           switch (diodeType) {
             case "led-red":
-              ledImage.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='45' fill='red' stroke='%23333' stroke-width='2'/%3E%3C/svg%3E";
+              ledImage.src =
+                "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='45' fill='red' stroke='%23333' stroke-width='2'/%3E%3C/svg%3E";
               break;
             case "led-green":
-              ledImage.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='45' fill='green' stroke='%23333' stroke-width='2'/%3E%3C/svg%3E";
+              ledImage.src =
+                "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='45' fill='green' stroke='%23333' stroke-width='2'/%3E%3C/svg%3E";
               break;
             case "led-blue":
-              ledImage.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='45' fill='blue' stroke='%23333' stroke-width='2'/%3E%3C/svg%3E";
+              ledImage.src =
+                "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='45' fill='blue' stroke='%23333' stroke-width='2'/%3E%3C/svg%3E";
               break;
             case "led-white":
-              ledImage.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='45' fill='white' stroke='%23333' stroke-width='2'/%3E%3C/svg%3E";
+              ledImage.src =
+                "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='45' fill='white' stroke='%23333' stroke-width='2'/%3E%3C/svg%3E";
               break;
           }
-          
+
           // Add glow effect only in forward bias
           if (testConfig === "forward") {
             ledImage.classList.add("forward-bias");
             ledImage.style.filter = `brightness(1.5) drop-shadow(0 0 10px ${color})`;
           }
-          
+
           const ledLabel = document.createElement("div");
           ledLabel.className = "led-label";
-          ledLabel.textContent = `${diodeType.replace('led-', '').toUpperCase()} LED`;
-          
+          ledLabel.textContent = `${diodeType
+            .replace("led-", "")
+            .toUpperCase()} LED`;
+
           ledContainer.appendChild(ledImage);
           ledContainer.appendChild(ledLabel);
           diodeVis.appendChild(ledContainer);
@@ -1712,7 +1774,7 @@
         }
       }
 
-      // Transistor functionality
+      // Enhanced Transistor functionality
       document
         .getElementById("show-transistor-specs")
         .addEventListener("click", showTransistorSpecs);
@@ -1723,47 +1785,56 @@
 
         let specs = "";
         let transistorName = "";
+        let packageType = "";
 
         switch (transistorType) {
           case "bc548":
             specs =
               "Type: NPN BJT | Max Collector Current: 100mA | Max VCEO: 30V | Current Gain (hFE): 110-800 | Max Power: 500mW | Package: TO-92";
             transistorName = "BC548";
+            packageType = "TO-92";
             break;
           case "bc547":
             specs =
               "Type: NPN BJT | Max Collector Current: 100mA | Max VCEO: 45V | Current Gain (hFE): 110-800 | Max Power: 500mW | Package: TO-92";
             transistorName = "BC547";
+            packageType = "TO-92";
             break;
           case "2n2222":
             specs =
               "Type: NPN BJT | Max Collector Current: 800mA | Max VCEO: 30V | Current Gain (hFE): 100-300 | Max Power: 500mW | Package: TO-18";
             transistorName = "2N2222";
+            packageType = "TO-18";
             break;
           case "bc557":
             specs =
               "Type: PNP BJT | Max Collector Current: 100mA | Max VCEO: 45V | Current Gain (hFE): 125-800 | Max Power: 500mW | Package: TO-92";
             transistorName = "BC557";
+            packageType = "TO-92";
             break;
           case "2n3904":
             specs =
               "Type: NPN BJT | Max Collector Current: 200mA | Max VCEO: 40V | Current Gain (hFE): 100-300 | Max Power: 625mW | Package: TO-92";
             transistorName = "2N3904";
+            packageType = "TO-92";
             break;
           case "2n3906":
             specs =
               "Type: PNP BJT | Max Collector Current: 200mA | Max VCEO: 40V | Current Gain (hFE): 100-300 | Max Power: 625mW | Package: TO-92";
             transistorName = "2N3906";
+            packageType = "TO-92";
             break;
           case "tip31":
             specs =
               "Type: NPN Power BJT | Max Collector Current: 3A | Max VCEO: 40V | Current Gain (hFE): 10-50 | Max Power: 40W | Package: TO-220";
             transistorName = "TIP31";
+            packageType = "TO-220";
             break;
           case "tip32":
             specs =
               "Type: PNP Power BJT | Max Collector Current: 3A | Max VCEO: 40V | Current Gain (hFE): 10-50 | Max Power: 40W | Package: TO-220";
             transistorName = "TIP32";
+            packageType = "TO-220";
             break;
         }
 
@@ -1781,7 +1852,7 @@
 
         const label = document.createElement("div");
         label.className = "transistor-label";
-        label.textContent = transistorName;
+        label.textContent = `${transistorName} (${packageType})`;
         body.appendChild(label);
 
         const baseLead = document.createElement("div");
@@ -1793,10 +1864,39 @@
         const emitterLead = document.createElement("div");
         emitterLead.className = "transistor-lead lead-emitter";
 
+        // Add pin labels with arrows
+        const baseLabel = document.createElement("div");
+        baseLabel.className = "pin-label pin-label-base";
+        baseLabel.textContent = "Base (B)";
+
+        const baseArrow = document.createElement("div");
+        baseArrow.className = "pin-arrow pin-arrow-base";
+
+        const collectorLabel = document.createElement("div");
+        collectorLabel.className = "pin-label pin-label-collector";
+        collectorLabel.textContent = "Collector (C)";
+
+        const collectorArrow = document.createElement("div");
+        collectorArrow.className = "pin-arrow pin-arrow-collector";
+
+        const emitterLabel = document.createElement("div");
+        emitterLabel.className = "pin-label pin-label-emitter";
+        emitterLabel.textContent = "Emitter (E)";
+
+        const emitterArrow = document.createElement("div");
+        emitterArrow.className = "pin-arrow pin-arrow-emitter";
+
+        // Append all elements
         transistorElement.appendChild(body);
         transistorElement.appendChild(baseLead);
         transistorElement.appendChild(collectorLead);
         transistorElement.appendChild(emitterLead);
+        transistorElement.appendChild(baseLabel);
+        transistorElement.appendChild(baseArrow);
+        transistorElement.appendChild(collectorLabel);
+        transistorElement.appendChild(collectorArrow);
+        transistorElement.appendChild(emitterLabel);
+        transistorElement.appendChild(emitterArrow);
 
         transistorVis.appendChild(transistorElement);
       }
